@@ -5,7 +5,7 @@
 This repository contains a [GitHub Actions](https://docs.github.com/en/actions) workflow that runs on a cronjob every 
 day to check and see if a new official [Talos Linux](https://github.com/siderolabs/talos) release has been pushed.
 
-If it detects a newer version is available (compared to the tag(s) in this repo) it will use the 
+If it detects a newer version is available _(compared to the tag(s) in this repo)_ it will use the 
 [Talos Imager](https://github.com/siderolabs/talos/tree/v1.5.0/pkg/imager) to build new 
 [Boot Assets](https://www.talos.dev/v1.5/talos-guides/install/boot-assets/) used in my 
 [home-ops](https://github.com/justingarfield/home-ops) environment.
