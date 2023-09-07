@@ -52,7 +52,7 @@ jobs:
     permissions:
       contents: write
     container:
-      image: ghcr.io/siderolabs/imager:${{ needs.check-releases.outputs.newTalosReleaseFound }}
+      image: ghcr.io/siderolabs/imager:${{ needs.check-releases.outputs.talosReleaseTag }}
       options: --privileged
       volumes:
         - /dev:/dev
@@ -62,21 +62,21 @@ jobs:
           /bin/imager installer \
             --arch amd64 \
             --system-extension-image ghcr.io/siderolabs/intel-ucode:${{ env.INTEL_UCODE_VERSION }} \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Build arm64 installer w/ DRBD for rpi_generic
         run: |
           /bin/imager installer \
             --arch arm64 \
             --board rpi_generic \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Build arm64 metal w/ DRBD for rpi_generic
         run: |
           /bin/imager metal \
             --arch arm64 \
             --board rpi_generic \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v3
