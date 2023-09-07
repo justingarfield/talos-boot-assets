@@ -1,3 +1,4 @@
+# Prevent things from going into automatic Source Code release assets
 /.ci export-ignore
 /.github export-ignore
 .gitattributes export-ignore

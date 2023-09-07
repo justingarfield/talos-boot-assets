@@ -9,9 +9,10 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  INTEL_UCODE_VERSION: 20230808
 
 jobs:
-  check-for-new-release:
+  check-releases:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch latest Talos release version
@@ -45,30 +46,37 @@ jobs:
       talosReleaseTag: ${{ steps.talos-release.outputs.talos_release_tag }}
 
   build-boot-assets:
-    needs: [ check-for-new-release ]
-    if: needs.check-for-new-release.outputs.newTalosReleaseFound
+    needs: [ check-releases ]
+    if: needs.check-releases.outputs.newTalosReleaseFound
     runs-on: ubuntu-latest
     permissions:
       contents: write
     container:
-      image: ghcr.io/siderolabs/imager:v1.5.1
+      image: ghcr.io/siderolabs/imager:${{ needs.check-releases.outputs.newTalosReleaseFound }}
       options: --privileged
       volumes:
         - /dev:/dev
     steps:
-      - name: Build installer w/ DRBD and Intel UCode
+      - name: Build amd64 installer w/ DRBD and Intel UCode
         run: |
           /bin/imager installer \
             --arch amd64 \
-            --system-extension-image ghcr.io/siderolabs/intel-ucode:20230808@sha256:f08b0d4d7f745419ddc9c79220788243940fb1a1a61638065fa4d137b9dcead2 \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-v1.5.1@sha256:70cf04c14847c21b40024c82c88623337514b70f6946913a4273b61432c78cf2
+            --system-extension-image ghcr.io/siderolabs/intel-ucode:${{ env.INTEL_UCODE_VERSION }} \
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
 
-      - name: Build metal w/ DRBD for rpi_generic
+      - name: Build arm64 installer w/ DRBD for rpi_generic
+        run: |
+          /bin/imager installer \
+            --arch arm64 \
+            --board rpi_generic \
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
+
+      - name: Build arm64 metal w/ DRBD for rpi_generic
         run: |
           /bin/imager metal \
             --arch arm64 \
             --board rpi_generic \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-v1.5.1@sha256:70cf04c14847c21b40024c82c88623337514b70f6946913a4273b61432c78cf2
+            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.newTalosReleaseFound }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v3
@@ -87,7 +95,7 @@ jobs:
           retention-days: 1
 
   create-release:
-    needs: [ check-for-new-release, build-boot-assets ]
+    needs: [ check-releases, build-boot-assets ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -101,13 +109,13 @@ jobs:
       - name: Create a new release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.check-for-new-release.outputs.talosReleaseTag }}
-          body: Talos release ${{ needs.check-for-new-release.outputs.talosReleaseTag }}
+          tag_name: ${{ needs.check-releases.outputs.talosReleaseTag }}
+          body: Talos release ${{ needs.check-releases.outputs.talosReleaseTag }}
           files: |
             /tmp/talos-build-assets/metal-rpi_generic-arm64.raw.xz
 
   push-container-image:
-    needs: [ check-for-new-release, build-boot-assets ]
+    needs: [ check-releases, build-boot-assets ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -136,4 +144,4 @@ jobs:
       - uses: imjasonh/setup-crane@v0.3
       - name: Crane push installer
         run: |
-          crane push /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/metal-amd64-installer:${{ needs.check-for-new-release.outputs.talosReleaseTag }}
+          crane push /tmp/talos-build-assets/installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
