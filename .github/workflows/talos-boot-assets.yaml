@@ -102,6 +102,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.check-for-new-release.outputs.talosReleaseTag }}
+          body: Talos release ${{ needs.check-for-new-release.outputs.talosReleaseTag }}
           files: |
             /tmp/talos-build-assets/metal-rpi_generic-arm64.raw.xz
 
