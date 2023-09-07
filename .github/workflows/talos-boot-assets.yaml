@@ -37,9 +37,6 @@ jobs:
           compare_result=$(/tmp/semver2.sh \
             ${{ steps.talos-release.outputs.talos_release_tag }} \
             ${{ steps.boot-asset-release.outputs.boot_assets_release_tag }})
-          echo -------------------
-          echo $compare_result
-          echo -------------------
           echo "compare_result=$compare_result" >> $GITHUB_OUTPUT
     outputs:
       newTalosReleaseFound: ${{ steps.compare-releases.outputs.compare_result }}
@@ -64,11 +61,10 @@ jobs:
             --system-extension-image ghcr.io/siderolabs/intel-ucode:${{ env.INTEL_UCODE_VERSION }} \
             --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
 
-      - name: Build arm64 installer w/ DRBD for rpi_generic
+      - name: Build arm64 installer w/ DRBD
         run: |
           /bin/imager installer \
             --arch arm64 \
-            --board rpi_generic \
             --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Build arm64 metal w/ DRBD for rpi_generic
@@ -110,7 +106,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.check-releases.outputs.talosReleaseTag }}
-          body: Talos release ${{ needs.check-releases.outputs.talosReleaseTag }}
+          body: Talos release ${{ needs.check-releases.outputs.talosReleaseTag }} boot assets for rpi_generic-arm64 with DRBD extension.
           files: |
             /tmp/talos-build-assets/metal-rpi_generic-arm64.raw.xz
 
@@ -144,4 +140,5 @@ jobs:
       - uses: imjasonh/setup-crane@v0.3
       - name: Crane push installer
         run: |
-          crane push /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
+          crane push /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}-amd64
+          crane push /tmp/talos-build-assets/metal-arm64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}-arm64
