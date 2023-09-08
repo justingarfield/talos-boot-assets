@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: talos-installer
-          path: /out/metal-*-installer.tar
+          path: /out/metal-amd64-installer.tar
           if-no-files-found: error
           retention-days: 1
 
@@ -141,7 +141,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v4.2.0
         with:
-          context: /tmp/talos-build-assets/metal-amd64-installer.tar
+          context: /tmp/talos-build-assets
           platforms: linux/amd64
           tags: ${{ needs.check-releases.outputs.talosReleaseTag }}
           cache-from: type=gha
