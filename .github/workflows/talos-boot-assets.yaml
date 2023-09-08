@@ -137,8 +137,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: imjasonh/setup-crane@v0.3
-      - name: Crane push installer
-        run: |
-          crane push --platform amd64 /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
-          crane push --platform arm64 /tmp/talos-build-assets/metal-arm64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
+      - name: Build and push container image
+        id: build
+        uses: docker/build-push-action@v4.2.0
+        with:
+          context: /tmp/talos-build-assets/metal-amd64-installer.tar
+          platforms: linux/amd64
+          tags: ${{ needs.check-releases.outputs.talosReleaseTag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          outputs: type=image,name=${{ env.REGISTRY }}/justingarfield/installer,push=true,push-by-digest=true,name-canonical=true
+          build-args: |
+            GITHUB_USER_EMAIL="justin@jgarfield.com"
+            GITHUB_USER_NAME="Justin Garfield"
+
+      # - uses: imjasonh/setup-crane@v0.3
+      # - name: Crane push installer
+      #   run: |
+      #     crane push --platform linux/amd64 /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
+      #     crane push --platform linux/arm64 /tmp/talos-build-assets/metal-arm64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
