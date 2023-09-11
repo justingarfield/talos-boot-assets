@@ -14,8 +14,11 @@ If it detects a newer version is available _(compared to the tag(s) in this repo
 
 Currently I output two final artifacts from this workflow:
 
-* `metal-rpi_generic-arm64.raw.xz` which shows up under releases, used for Raspberry Pi 4s
-* `metal-amd64-installer` which shows up under packages, used for Hyper-V VM installs
+| Artifact Name | Description |
+|-|-|
+| `metal-rpi_generic-arm64.raw.xz` | Shows up under [Releases](https://github.com/justingarfield/talos-boot-assets/releases), used for Raspberry Pi 4 Raw Disk Image |
+| `installer-amd64`                | Shows up under Packages, used for Hyper-V VM installs |
+| `installer-arm64`                | Shows up under Packages, used for Hyper-V VM installs |
 
 ## Workflow
 
