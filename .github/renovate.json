@@ -5,5 +5,14 @@
   ],
   "major": {
     "dependencyDashboardApproval": true
-  }
+  },
+  "regexManagers": [
+    {
+      "fileMatch": ["^.github/workflows/.+\\.ya?ml$"],
+      "matchStrings": [
+        "#\\s?renovate: depName=(?<depName>.*?)\\s.*_VERSION:(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
 }

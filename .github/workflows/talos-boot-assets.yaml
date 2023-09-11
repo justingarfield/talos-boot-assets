@@ -9,8 +9,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # renovate: datasource=docker depName=siderolabs/intel-ucode lookupName=ghcr.io/siderolabs/intel-ucode
-  INTEL_UCODE_VERSION: 20230808
+  # renovate: datasource=docker depName=ghcr.io/siderolabs/intel-ucode
+  INTEL_UCODE_VERSION: 20230613
+  DRBD_VERSION: 9.2.4
 
 jobs:
   check-releases:
@@ -68,20 +69,20 @@ jobs:
           /bin/imager installer \
             --arch amd64 \
             --system-extension-image ghcr.io/siderolabs/intel-ucode:${{ env.INTEL_UCODE_VERSION }} \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
+            --system-extension-image ghcr.io/siderolabs/drbd:${{ env.DRBD_VERSION }}-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Build arm64 installer w/ DRBD
         run: |
           /bin/imager installer \
             --arch arm64 \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
+            --system-extension-image ghcr.io/siderolabs/drbd:${{ env.DRBD_VERSION }}-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Build arm64 metal w/ DRBD for rpi_generic
         run: |
           /bin/imager metal \
             --arch arm64 \
             --board rpi_generic \
-            --system-extension-image ghcr.io/siderolabs/drbd:9.2.4-${{ needs.check-releases.outputs.talosReleaseTag }}
+            --system-extension-image ghcr.io/siderolabs/drbd:${{ env.DRBD_VERSION }}-${{ needs.check-releases.outputs.talosReleaseTag }}
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v3
