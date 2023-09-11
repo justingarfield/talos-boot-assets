@@ -27,6 +27,13 @@ jobs:
           boot_assets_release_tag=$(curl -sL https://api.github.com/repos/justingarfield/talos-boot-assets/releases/latest | jq -r ".tag_name")
           echo "boot_assets_release_tag=$boot_assets_release_tag" >> $GITHUB_OUTPUT
 
+      - name: Fetch latest Talos release body
+        id: talos-release-body
+        run: |
+          echo 'talos_release_body<<EOF' >> $GITHUB_OUTPUT
+          curl -sL https://api.github.com/repos/siderolabs/talos/releases/latest | jq -r ".body" >> $GITHUB_OUTPUT
+          echo EOF >> $GITHUB_OUTPUT
+
       # Still need to decide if I want to download and expand the Release Asset instead for more stability
       - name: Compare release versions
         if: steps.talos-release.outputs.talos_release_tag != steps.boot-asset-release.outputs.boot_assets_release_tag
@@ -41,6 +48,7 @@ jobs:
     outputs:
       newTalosReleaseFound: ${{ steps.compare-releases.outputs.compare_result }}
       talosReleaseTag: ${{ steps.talos-release.outputs.talos_release_tag }}
+      talosReleaseBody: ${{ steps.talos-release-body.outputs.talos_release_body }}
 
   build-boot-assets:
     needs: [ check-releases ]
@@ -78,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: talos-installer
-          path: /out/metal-amd64-installer.tar
+          path: /out/metal-*-installer.tar
           if-no-files-found: error
           retention-days: 1
 
@@ -106,7 +114,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.check-releases.outputs.talosReleaseTag }}
-          body: Talos release ${{ needs.check-releases.outputs.talosReleaseTag }} boot assets for rpi_generic-arm64 with DRBD extension.
+          body: ${{ needs.check-releases.outputs.talosReleaseBody }}
           files: |
             /tmp/talos-build-assets/metal-rpi_generic-arm64.raw.xz
 
@@ -137,22 +145,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push container image
-        id: build
-        uses: docker/build-push-action@v4.2.0
-        with:
-          context: /tmp/talos-build-assets
-          platforms: linux/amd64
-          tags: ${{ needs.check-releases.outputs.talosReleaseTag }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          outputs: type=image,name=${{ env.REGISTRY }}/justingarfield/installer,push=true,push-by-digest=true,name-canonical=true
-          build-args: |
-            GITHUB_USER_EMAIL="justin@jgarfield.com"
-            GITHUB_USER_NAME="Justin Garfield"
-
-      # - uses: imjasonh/setup-crane@v0.3
-      # - name: Crane push installer
-      #   run: |
-      #     crane push --platform linux/amd64 /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
-      #     crane push --platform linux/arm64 /tmp/talos-build-assets/metal-arm64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer:${{ needs.check-releases.outputs.talosReleaseTag }}
+      # Ultimately want this to have both architectures under a single tag, but I need to learn more about screwing
+      # with tagging and Image Manifests / Manifest Lists to get this going properly.
+      - uses: imjasonh/setup-crane@v0.3
+      - name: Crane push installer
+        run: |
+          crane push --platform linux/amd64 /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer-amd64:${{ needs.check-releases.outputs.talosReleaseTag }}
+          crane push --platform linux/arm64 /tmp/talos-build-assets/metal-arm64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer-arm64:${{ needs.check-releases.outputs.talosReleaseTag }}
