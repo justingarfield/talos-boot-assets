@@ -11,11 +11,23 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/siderolabs/intel-ucode"],
       "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/siderolabs/i915-ucode"],
+      "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
     }
   ],
   "regexManagers": [
     {
       "fileMatch": [ "^.github/workflows/.+\\.ya?ml$" ],
+      "matchStrings": [
+          "#\\s?renovate: ?\\s+depName=(?<depName>.+?)?\\s(?:.*_(?:version|VERSION):\\s+(?<currentValue>.*))"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": [ "sample-for-perihelion.yaml" ],
       "matchStrings": [
           "#\\s?renovate: ?\\s+depName=(?<depName>.+?)?\\s(?:.*_(?:version|VERSION):\\s+(?<currentValue>.*))"
       ],

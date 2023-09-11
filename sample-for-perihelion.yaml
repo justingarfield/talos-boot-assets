@@ -1,0 +1,21 @@
+---
+name: Talos Boot Assets Generation
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch: { }
+
+env:
+  REGISTRY: ghcr.io
+  # renovate: depName=ghcr.io/siderolabs/qemu-guest-agent:8.0.2
+  QEMU_GUEST_AGENT_VERSION: 8.1.0
+  # renovate: depName=ghcr.io/siderolabs/i915-ucode
+  I915_UCODE_VERSION: 20230804
+  # renovate: depName=ghcr.io/siderolabs/iscsi-tools:v0.1.4
+  ISCSI_TOOLS_VERSION: v0.1.4
+
+stuff:
+  and:
+    - things
