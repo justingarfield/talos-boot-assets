@@ -12,7 +12,8 @@
       "matchStrings": [
         "#\\s?renovate: depName=(?<depName>.*?)\\s.*_VERSION:(?<currentValue>.*)"
       ],
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
     }
   ]
 }
