@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # renovate: datasource=docker depName=ghcr.io/siderolabs/intel-ucode
+  # renovate: datasource=docker depName=siderolabs/intel-ucode
   INTEL_UCODE_VERSION: 20230613
   DRBD_VERSION: 9.2.4
 
