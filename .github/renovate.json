@@ -15,11 +15,11 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["^.github/workflows/.+\\.ya?ml$"],
+      "fileMatch": [ "^.github/workflows/.+\\.ya?ml$" ],
       "matchStrings": [
-        "#\\s?renovate: depName=(?<depName>.*?)\\s.*_VERSION:(?<currentValue>.*)"
+          "# renovate: datasource=(?<datasource>.*?)(?:\\s+extractVersion=(?<extractVersion>.+?))?(?:\\s+versioning=(?<versioning>.+?))?\\s+depName=(?<depName>.+?)?\\s(?:.*_(?:version|VERSION):\\s+(?<currentValue>.*))?(?:(\\s)?.*_(?:ref|REF):\\s+(?<currentDigest>.*))?"
       ],
-      "datasourceTemplate": "docker"
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
     }
   ]
 }
