@@ -12,7 +12,7 @@ env:
   # renovate: depName=ghcr.io/siderolabs/qemu-guest-agent
   QEMU_GUEST_AGENT_VERSION: 8.0.2
   # renovate: depName=ghcr.io/siderolabs/i915-ucode
-  I915_UCODE_VERSION: 20230310
+  I915_UCODE_VERSION: 20230804
   # renovate: depName=ghcr.io/siderolabs/iscsi-tools
   ISCSI_TOOLS_VERSION: v0.1.3
 
