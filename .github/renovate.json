@@ -18,6 +18,11 @@
       "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
     },
     {
+      "description": "Group updates into single PR",
+      "matchFileNames": ["sample-for-perihelion.yaml"],
+      "groupName": "Talos boot assets"
+    },
+    {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/siderolabs/i915-ucode"],
       "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
