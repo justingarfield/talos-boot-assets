@@ -8,6 +8,11 @@
   },
   "packageRules": [
     {
+      "description": "Group updates into single PR",
+      "matchFileNames": [".github/workflows/talos-boot-assets.yaml"],
+      "groupName": "Talos boot assets"
+    },
+    {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/siderolabs/intel-ucode"],
       "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
