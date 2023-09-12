@@ -12,13 +12,13 @@ If it detects a newer version is available _(compared to the tag(s) in this repo
 
 ## Release Artifacts
 
-Currently I output two final artifacts from this workflow:
+Currently I output three artifacts from this workflow:
 
 | Artifact Name | Description |
 |-|-|
 | `metal-rpi_generic-arm64.raw.xz` | Shows up under [Releases](https://github.com/justingarfield/talos-boot-assets/releases), used for Raspberry Pi 4 Raw Disk Image |
-| `installer-amd64`                | Shows up under Packages, used for Hyper-V VM installs |
-| `installer-arm64`                | Shows up under Packages, used for Hyper-V VM installs |
+| `installer-amd64`                | Shows up under Packages, used for Hyper-V VM installs / upgrades |
+| `installer-arm64`                | Shows up under Packages, used for Raspberry Pi 4 upgrades |
 
 ## Workflow
 
@@ -39,8 +39,9 @@ NewVersionAvail -->|Yes| build-boot-assets
 NewVersionAvail -->|No| End
 
 subgraph build-boot-assets
-    BuildInstaller[Build Talos\nInstaller\nContainer Image]
-    BuildInstaller --> BuildRpi[Build Talos\nmetal-rpi_generic\nRaw Image]
+    BuildInstallerAmd64[Build Talos\namd64 Installer\nContainer Image]
+    BuildInstallerAmd64 --> BuildInstallerArm64[Build Talos\narm64 Installer\nContainer Image]
+    BuildInstallerArm64 --> BuildRpi[Build Talos\nmetal-rpi_generic\nRaw Image]
     BuildRpi --> UploadArtifacts[Upload\nArtifacts]
 end
 
