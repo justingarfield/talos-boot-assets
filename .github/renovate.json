@@ -20,7 +20,7 @@
     {
       "description": "Group updates into single PR",
       "matchFileNames": ["sample-for-perihelion.yaml"],
-      "groupName": "Talos boot assets"
+      "groupName": "Talos boot assets2"
     },
     {
       "matchDatasources": ["docker"],
