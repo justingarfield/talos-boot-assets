@@ -149,6 +149,7 @@ jobs:
 
       # Ultimately want this to have both architectures under a single tag, but I need to learn more about screwing
       # with tagging and Image Manifests / Manifest Lists to get this going properly.
+      # See: https://github.com/justingarfield/talos-boot-assets/issues/13
       - uses: imjasonh/setup-crane@v0.3
       - name: Crane push installer
         run: |

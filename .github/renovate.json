@@ -10,34 +10,17 @@
     {
       "description": "Group updates into single PR",
       "matchFileNames": [".github/workflows/talos-boot-assets.yaml"],
-      "groupName": "Talos boot assets - temp"
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/siderolabs/intel-ucode"],
-      "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
-    },
-    {
-      "description": "Group updates into single PR",
-      "matchFileNames": ["sample-for-perihelion.yaml"],
       "groupName": "Talos boot assets"
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/siderolabs/i915-ucode"],
+      "matchPackageNames": ["ghcr.io/siderolabs/intel-ucode"],
       "versioning": "regex:^(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.?(?<build>\\d+)?$"
     }
   ],
   "regexManagers": [
     {
       "fileMatch": [ "^.github/workflows/.+\\.ya?ml$" ],
-      "matchStrings": [
-          "#\\s?renovate: ?\\s+depName=(?<depName>.+?)?\\s(?:.*_(?:version|VERSION):\\s+(?<currentValue>.*))"
-      ],
-      "datasourceTemplate": "docker"
-    },
-    {
-      "fileMatch": [ "sample-for-perihelion.yaml" ],
       "matchStrings": [
           "#\\s?renovate: ?\\s+depName=(?<depName>.+?)?\\s(?:.*_(?:version|VERSION):\\s+(?<currentValue>.*))"
       ],

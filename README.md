@@ -17,8 +17,8 @@ Currently I output three artifacts from this workflow:
 | Artifact Name | Description |
 |-|-|
 | `metal-rpi_generic-arm64.raw.xz` | Shows up under [Releases](https://github.com/justingarfield/talos-boot-assets/releases), used for Raspberry Pi 4 Raw Disk Image |
-| `installer-amd64`                | Shows up under Packages, used for Hyper-V VM installs / upgrades |
-| `installer-arm64`                | Shows up under Packages, used for Raspberry Pi 4 upgrades |
+| `installer-amd64`                | Shows up under [Packages](https://github.com/justingarfield?tab=packages&repo_name=talos-boot-assets), used for Hyper-V VM installs / upgrades |
+| `installer-arm64`                | Shows up under [Packages](https://github.com/justingarfield?tab=packages&repo_name=talos-boot-assets), used for Raspberry Pi 4 upgrades |
 
 ## Workflow
 
