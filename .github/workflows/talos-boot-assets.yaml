@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   # renovate: depName=ghcr.io/siderolabs/intel-ucode
-  INTEL_UCODE_VERSION: 20230808
+  INTEL_UCODE_VERSION: 20231114
   DRBD_VERSION: 9.2.4
 
 jobs:
