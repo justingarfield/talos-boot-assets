@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   # renovate: depName=ghcr.io/siderolabs/intel-ucode
-  INTEL_UCODE_VERSION: 20230808
+  INTEL_UCODE_VERSION: 20231114
   DRBD_VERSION: 9.2.4
 
 jobs:
@@ -135,13 +135,13 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3.0.0
+        uses: docker/setup-buildx-action@v3.12.0
         with:
-          version: v0.11.2
+          version: v0.37.0
           driver-opts: image=moby/buildkit:v0.12.0
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@v3.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -150,7 +150,7 @@ jobs:
       # Ultimately want this to have both architectures under a single tag, but I need to learn more about screwing
       # with tagging and Image Manifests / Manifest Lists to get this going properly.
       # See: https://github.com/justingarfield/talos-boot-assets/issues/13
-      - uses: imjasonh/setup-crane@v0.3
+      - uses: imjasonh/setup-crane@v0.7
       - name: Crane push installer
         run: |
           crane push --platform linux/amd64 /tmp/talos-build-assets/metal-amd64-installer.tar ${{ env.REGISTRY }}/justingarfield/installer-amd64:${{ needs.check-releases.outputs.talosReleaseTag }}
